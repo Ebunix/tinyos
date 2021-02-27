@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "[Info] Updating apt package cache"
 sudo apt-get update -qq > /dev/null
 echo "[Info] Upgrading apt packages, this might take a while"
