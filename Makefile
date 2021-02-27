@@ -1,4 +1,4 @@
-LD := x86_64-linux-gnu-ld
+LD := x86_64-elf-ld
 ARCH := x86_64
 
 asm_src := $(shell find src/impl/$(ARCH) -name *.asm)
