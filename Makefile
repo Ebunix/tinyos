@@ -9,6 +9,7 @@ ISO := $(DIR_DIST)/$(ARCH)/build.iso
 KERNEL := $(DIR_DIST)/$(ARCH)/kernel.bin
 TARGETS := targets/$(ARCH)
 CCFLAGS := -g -Isrc/include -nostartfiles -nostdlib -ffreestanding
+EMUARGS := -m 128 -no-reboot -no-shutdown -monitor stdio -d int,cpu_reset
 
 asm_src := $(shell find src/impl/$(ARCH) -name *.asm)
 asm_obj := $(patsubst src/impl/$(ARCH)/%.asm, $(DIR_BUILD)/$(ARCH)/%.o, $(asm_src))
@@ -37,10 +38,10 @@ $(ISO): build
 .PHONY: run debug clean $(ISO)
 
 run: $(ISO)
-	qemu-system-x86_64 -cdrom $(ISO)
+	qemu-system-x86_64 $(EMUARGS) -cdrom $(ISO)
 
 debug: $(ISO)
-	qemu-system-x86_64 -S -s -cdrom dist/x86_64/build.iso
+	qemu-system-x86_64 $(EMUARGS) -S -s -cdrom dist/x86_64/build.iso
 
 clean:
 	rm -rf $(DIR_BUILD)

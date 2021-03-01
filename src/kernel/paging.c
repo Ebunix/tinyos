@@ -1,11 +1,10 @@
-#include <kernel/paging.h>
+#include <kernel/memory/paging.h>
 #include <kernel/vgavideo.h>
 
-const int page_table_entry_count = 512;
-extern page_table_entry* page_table_l4;
-extern page_table_entry* page_table_l3;
-extern page_table_entry* page_table_l2;
-extern page_table_entry* page_table_l1;
+extern PageMapLevel4Entry* page_table_l4;
+extern PageDirPointerTablePageDirEntry* page_table_l3;
+extern PageDirPageTableEntry* page_table_l2;
+extern PageTableEntry* page_table_l1;
 
 size_t varaddr(void* p) {
     return (size_t)p;

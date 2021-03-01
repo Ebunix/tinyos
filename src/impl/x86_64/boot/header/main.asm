@@ -3,6 +3,8 @@ global page_table_l4
 global page_table_l3
 global page_table_l2
 global page_table_l1
+global __idt_ptr
+global idt
 
 extern long_mode_start
 
@@ -152,7 +154,7 @@ error:
 
 print:
     xor eax, eax
-.loop
+.loop:
     lodsb
     cmp ax, 0
     jz print.done
@@ -189,13 +191,20 @@ stack_bottom:
     resb 4096 * 4 ; reserve 16k of stack space for now
 stack_top:
 
+__idt_ptr:
+    resb 16 * 0xFF
+idt_end:
 
 section .rodata
+
+idt:
+    dw idt_end - __idt_ptr
+    dq __idt_ptr
 
 gdt64:
     dq 0
 .code_segment: equ $ - gdt64
-    dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53) ; code segment (Executable, Code/Data segment, present, 64 bit)
+    dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53) ; code segment (Executable, code, present, 64 bit)
 .pointer: 
     dw $ - gdt64 - 1
     dq gdt64

@@ -1,8 +1,11 @@
 global long_mode_start
 global hang 
 global dump
+global load_idt
+global divide_zero
 
 extern kmain
+extern idt
 
 section .text
 bits 64
@@ -19,8 +22,18 @@ long_mode_start:
 
 hang:
     cli
-    ;hlt
+    hlt
     jmp $
+
+load_idt:
+    lidt [idt]
+    ret
+
+divide_zero:
+    mov eax, 0xFFFF
+    mov ebx, 0
+    div ebx
+    ret
 
 dump:
     mov [eax], eax
