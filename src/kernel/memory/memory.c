@@ -1,4 +1,5 @@
-#include <kernel/memory.h>
+#include <kernel/memory/memory.h>
+#include <kernel/stdint.h>
 
 void* memset(void* dst, int val, unsigned long long size) {
     char* cp = (char*)dst;

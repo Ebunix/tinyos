@@ -24,7 +24,7 @@ iso: $(ISO)
 
 $(asm_obj): $(DIR_BUILD)/$(ARCH)/%.o : src/impl/$(ARCH)/%.asm
 	mkdir -p $(dir $@)
-	nasm -f elf64 $(patsubst $(DIR_BUILD)/$(ARCH)/%.o, src/impl/$(ARCH)/%.asm, $@) -o $@
+	nasm -g -f elf64 $(patsubst $(DIR_BUILD)/$(ARCH)/%.o, src/impl/$(ARCH)/%.asm, $@) -o $@
 
 $(c_obj): $(DIR_BUILD)/$(ARCH)/%.o : src/%.c
 	mkdir -p $(dir $@)

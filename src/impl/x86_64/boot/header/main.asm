@@ -1,5 +1,9 @@
 global start
-global panic_message_oops
+global page_table_l4
+global page_table_l3
+global page_table_l2
+global page_table_l1
+
 extern long_mode_start
 
 section .text
@@ -74,16 +78,20 @@ setup_page_tables:
     or eax, 0b11 ; present, writeable
     mov [page_table_l3], eax
 
-    mov ecx, 0 ; counter
-
-.loop: ; Fill some of L2 page table with identity map (should be 256 MiB)
-    mov eax, 0x200000 ; 2 MiB
+    mov eax, page_table_l1
+    or eax, 0b11 ; present, writeable
+    mov [page_table_l2], eax
+    
+    ; identity map first 2 MiB
+    mov ecx, 0
+.loop:
+    mov eax, 0x1000
     mul ecx
-    or eax, 0b10000011 ; present, writeable, huge page
-    mov [page_table_l2 + ecx * 8], eax
+    or eax, 0b11
+    mov [page_table_l1 + ecx * 8], eax
     inc ecx
-    cmp ecx, 128
-    jne setup_page_tables.loop
+    cmp ecx, 512
+    jne .loop    
     ret
 
 enable_paging:
@@ -91,15 +99,20 @@ enable_paging:
     mov eax, page_table_l4
     mov cr3, eax
 
+    ; following code sets up the CPU to use 4-level paging
+    ; CR4.PAE = 1
+    ; CR4.LA57 = 0
+    ; IA_32_EFER.LME = 1
+
     ; enable PAE
     mov eax, cr4
-    or eax, 1 << 5 ; PAE bit
+    or eax, 1 << 5 ; PAE bit (CR4.PAE)
     mov cr4, eax
 
     ; enable long mode
     mov ecx, 0xC0000080 ; magic
     rdmsr
-    or eax, 1 << 8 ; long mode bit
+    or eax, 1 << 8 ; long mode enable bit (IA32_EFER.LME)
     wrmsr
 
     ; enable paging
@@ -161,9 +174,6 @@ hang:
 
 
 section .bss
-stack_bottom:
-    resb 4096 * 4 ; reserve 16k of stack space for now
-stack_top:
 
 align 4096
 page_table_l4:
@@ -172,6 +182,12 @@ page_table_l3:
     resb 4096
 page_table_l2:
     resb 4096
+page_table_l1:
+    resb 4096
+    
+stack_bottom:
+    resb 4096 * 4 ; reserve 16k of stack space for now
+stack_top:
 
 
 section .rodata

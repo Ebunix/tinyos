@@ -1,11 +1,14 @@
 #include <kernel/vgavideo.h>
-#include <kernel/memory.h>
 #include <kernel/string.h>
 
 vga_char* vga_memory = (vga_char*)0xb8000;
 int vga_x = 0;
 int vga_y = 0;
 char vga_bg = 0x0F;
+
+void vga_color(char color) {
+    vga_bg = color;
+}
 
 void vga_clear(char c) {
     vga_pos(0, 0);
@@ -71,5 +74,27 @@ void vga_putc(char c) {
 void vga_puts(const char* str) {
     for(size_t i = 0; i < strlen(str); i++) {
         vga_putc(str[i]);
+    }
+}
+
+void vga_put_byte(char byte) {
+    char num = 0;
+    num = 48 + ((byte & 0xF0) >> 4);
+    if (num >= 58) {
+        num += 7;
+    }
+    vga_putc(num);
+    num = 48 + (byte & 0x0F);
+    if (num >= 58) {
+        num += 7;
+    }
+    vga_putc(num);
+}
+
+void vga_put_hex(uint64_t var) {
+    vga_puts("0x");
+    for (int i = 7; i >= 0; i--) {
+        char num = (char)(var >> (i * 8));
+        vga_put_byte(num);
     }
 }

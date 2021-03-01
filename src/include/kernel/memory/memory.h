@@ -3,4 +3,6 @@
 
 void* memset(void* dst, int val, unsigned long long size);
 
+void mem_setup_pages();
+
 #endif
