@@ -48,4 +48,8 @@ if [ ! -d "gcc-build" ]; then
 fi
 
 cd ..
+
+echo "[Info] Adding new cross-compiler to PATH, restart terminal to make it available"
+echo "export PATH=\"\$HOME/opt/cross/bin:\$PATH\"" >> $HOME/.bashrc
+
 echo "[Info] All done! You may delete the 'env' directory now"
