@@ -5,7 +5,6 @@ global load_idt
 global divide_zero
 
 extern kmain
-extern idt
 
 section .text
 bits 64
@@ -26,7 +25,7 @@ hang:
     jmp $
 
 load_idt:
-    lidt [idt]
+    lidt [ebx]
     ret
 
 divide_zero:

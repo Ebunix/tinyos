@@ -2,6 +2,7 @@
     "files.associations": {
         "paging.h": "c",
         "page_table.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "panic.h": "c"
     }
 }

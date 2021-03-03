@@ -21,6 +21,8 @@ typedef struct {
     uint32_t reserved;
 } InterruptDescriptor;
 
+#define NUM_IDT_ENTRIES 32
+
 void interrupts_initialize();
 
 #endif

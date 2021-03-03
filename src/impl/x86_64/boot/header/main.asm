@@ -3,8 +3,6 @@ global page_table_l4
 global page_table_l3
 global page_table_l2
 global page_table_l1
-global __idt_ptr
-global idt
 
 extern long_mode_start
 
@@ -191,15 +189,7 @@ stack_bottom:
     resb 4096 * 4 ; reserve 16k of stack space for now
 stack_top:
 
-__idt_ptr:
-    resb 16 * 0xFF
-idt_end:
-
 section .rodata
-
-idt:
-    dw idt_end - __idt_ptr
-    dq __idt_ptr
 
 gdt64:
     dq 0

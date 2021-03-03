@@ -42,7 +42,7 @@ void panic() {
         vga_pos(52, 2+i+offset);
         vga_puts(reg_names[i]);
         vga_putc(' ');
-        vga_put_hex(&reg[i], 8);
+        vga_put_hex(reg[i]);
     }
 
     hang();
